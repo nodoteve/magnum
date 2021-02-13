@@ -560,6 +560,14 @@ void Context::setupDriverWorkarounds() {
         _setRequiredVersion(EXT::disjoint_timer_query, None);
     #endif
 
+    /* The WEBGL_multi_draw entrypoints are only available since Emscripten
+       2.0.0: https://github.com/emscripten-core/emscripten/pull/11650
+       However, the extension is advertised even on older versions and we have
+       no way to link to those entrypoints there. */
+    #if defined(MAGNUM_TARGET_WEBGL) && __EMSCRIPTEN_major__ < 2
+    _setRequiredVersion(WEBGL::multi_draw, None);
+    #endif
+
     #undef _setRequiredVersion
 
     #ifndef MAGNUM_TARGET_GLES
